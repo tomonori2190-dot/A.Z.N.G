@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A.Z.N.G. — Threads 發文輔助系統</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Space+Mono:wght@400;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f2ee;
+    --cream: #ede8df;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --red: #c0392b;
+    --gray: #888;
+    --gray-light: #bbb;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Noto Sans TC', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 10000;
+    padding: 24px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(10,10,10,0.92);
+  }
+
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--gray-light);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 50%, rgba(201,168,76,0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 10% 80%, rgba(192,57,43,0.06) 0%, transparent 60%);
+  }
+
+  .hero-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+
+  .hero-title {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 900;
+    font-size: clamp(52px, 8vw, 110px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+
+  .hero-title .line-gold { color: var(--gold); }
+  .hero-title .line-dim { color: rgba(245,242,238,0.25); }
+
+  .hero-sub {
+    max-width: 520px;
+    font-size: 16px;
+    line-height: 1.8;
+    color: rgba(245,242,238,0.6);
+    margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.8s;
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--black);
+    padding: 16px 36px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+  }
+
+  .btn-outline {
+    border: 1px solid rgba(245,242,238,0.2);
+    color: var(--white);
+    padding: 16px 36px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s;
+    display: inline-block;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px;
+    left: 48px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--gray);
+    text-transform: uppercase;
+    animation: fadeIn 1s ease forwards 1.2s;
+    opacity: 0;
+  }
+
+  .scroll-line {
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+    animation: expandLine 1s ease forwards 1.4s;
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+
+  /* ── TICKER ── */
+  .ticker {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 16px 0;
+    overflow: hidden;
+    background: rgba(201,168,76,0.04);
+  }
+
+  .ticker-inner {
+    display: flex;
+    gap: 80px;
+    animation: ticker 20s linear infinite;
+    white-space: nowrap;
+  }
+
+  .ticker-item {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  .ticker-sep {
+    color: rgba(201,168,76,0.3);
+  }
+
+  /* ── SECTION COMMON ── */
+  section { padding: 120px 48px; }
+
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .section-tag::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.4;
+  }
+
+  .section-title {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 700;
+    font-size: clamp(32px, 4vw, 56px);
+    line-height: 1.15;
+    margin-bottom: 24px;
+  }
+
+  /* ── PROBLEM ── */
+  .problem {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .problem-text { max-width: 480px; }
+
+  .problem-text p {
+    color: rgba(245,242,238,0.6);
+    font-size: 16px;
+    line-height: 1.9;
+    margin-bottom: 20px;
+  }
+
+  .problem-visual {
+    position: relative;
+  }
+
+  .pain-points {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .pain-point {
+    padding: 24px 28px;
+    background: rgba(255,255,255,0.03);
+    border-left: 2px solid transparent;
+    transition: all 0.3s;
+    cursor: default;
+  }
+
+  .pain-point:hover {
+    background: rgba(255,255,255,0.06);
+    border-left-color: var(--red);
+  }
+
+  .pain-point-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--red);
+    letter-spacing: 0.2em;
+    margin-bottom: 8px;
+  }
+
+  .pain-point-text {
+    font-size: 14px;
+    color: rgba(245,242,238,0.7);
+    line-height: 1.6;
+  }
+
+  /* ── FEATURES ── */
+  .features-section {
+    background: rgba(255,255,255,0.015);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .features-header {
+    max-width: 1200px;
+    margin: 0 auto 80px;
+    text-align: center;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .feature-card {
+    padding: 48px 36px;
+    background: rgba(10,10,10,0.8);
+    border: 1px solid rgba(255,255,255,0.05);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+    cursor: default;
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s;
+  }
+
+  .feature-card:hover::before { transform: scaleX(1); }
+
+  .feature-card:hover {
+    background: rgba(201,168,76,0.04);
+    transform: translateY(-4px);
+  }
+
+  .feature-icon {
+    font-size: 32px;
+    margin-bottom: 24px;
+    display: block;
+  }
+
+  .feature-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-bottom: 16px;
+    opacity: 0.6;
+  }
+
+  .feature-title {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 700;
+    font-size: 20px;
+    margin-bottom: 16px;
+    line-height: 1.4;
+  }
+
+  .feature-desc {
+    font-size: 13px;
+    color: rgba(245,242,238,0.5);
+    line-height: 1.8;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .how-inner {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 64px;
+    position: relative;
+  }
+
+  .steps::before {
+    content: '';
+    position: absolute;
+    left: 28px;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    opacity: 0.2;
+  }
+
+  .step {
+    display: flex;
+    gap: 40px;
+    padding: 40px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: all 0.3s;
+  }
+
+  .step:last-child { border-bottom: none; }
+
+  .step:hover .step-num { color: var(--gold); }
+
+  .step-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gray);
+    min-width: 56px;
+    padding-top: 4px;
+    transition: color 0.3s;
+  }
+
+  .step-content {}
+
+  .step-title {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 700;
+    font-size: 22px;
+    margin-bottom: 12px;
+  }
+
+  .step-desc {
+    font-size: 14px;
+    color: rgba(245,242,238,0.5);
+    line-height: 1.8;
+  }
+
+  /* ── PRICING ── */
+  .pricing-section {
+    background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.03), transparent);
+  }
+
+  .pricing-header {
+    max-width: 1200px;
+    margin: 0 auto 80px;
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .price-card {
+    padding: 48px 36px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+    transition: all 0.3s;
+  }
+
+  .price-card.featured {
+    background: rgba(201,168,76,0.06);
+    border-color: rgba(201,168,76,0.3);
+  }
+
+  .price-card.featured::after {
+    content: '推薦';
+    position: absolute;
+    top: -1px; right: 28px;
+    background: var(--gold);
+    color: var(--black);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    padding: 6px 14px;
+    text-transform: uppercase;
+  }
+
+  .price-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--gray);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .price-amount {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 52px;
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .price-amount span {
+    font-size: 20px;
+    color: var(--gray);
+    font-weight: 400;
+  }
+
+  .price-period {
+    font-size: 13px;
+    color: var(--gray);
+    margin-bottom: 36px;
+  }
+
+  .price-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+    margin-bottom: 32px;
+  }
+
+  .price-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 40px;
+  }
+
+  .price-features li {
+    font-size: 13px;
+    color: rgba(245,242,238,0.6);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.5;
+  }
+
+  .price-features li::before {
+    content: '—';
+    color: var(--gold);
+    flex-shrink: 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    margin-top: 1px;
+  }
+
+  /* ── TRIAL ── */
+  .trial-section {
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .trial-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: center;
+  }
+
+  .trial-text .section-title { font-size: clamp(28px, 3vw, 44px); }
+
+  .trial-text p {
+    color: rgba(245,242,238,0.55);
+    font-size: 15px;
+    line-height: 1.9;
+    margin-bottom: 16px;
+  }
+
+  .trial-conditions {
+    margin-top: 36px;
+    padding: 28px;
+    border: 1px solid rgba(201,168,76,0.2);
+    background: rgba(201,168,76,0.03);
+  }
+
+  .trial-conditions-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .trial-conditions ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .trial-conditions li {
+    font-size: 13px;
+    color: rgba(245,242,238,0.6);
+    display: flex;
+    gap: 10px;
+  }
+
+  .trial-conditions li::before {
+    content: '✦';
+    color: var(--gold);
+    font-size: 10px;
+    margin-top: 2px;
+  }
+
+  .trial-visual {
+    position: relative;
+  }
+
+  .terminal-mock {
+    background: #0d0d0d;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 0;
+    font-family: 'Space Mono', monospace;
+    overflow: hidden;
+  }
+
+  .terminal-bar {
+    background: rgba(255,255,255,0.05);
+    padding: 12px 16px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .terminal-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+
+  .terminal-dot.red { background: #ff5f57; }
+  .terminal-dot.yellow { background: #ffbd2e; }
+  .terminal-dot.green { background: #28ca41; }
+
+  .terminal-title {
+    font-size: 10px;
+    color: var(--gray);
+    letter-spacing: 0.15em;
+    margin-left: 8px;
+  }
+
+  .terminal-body {
+    padding: 24px;
+    font-size: 12px;
+    line-height: 2;
+  }
+
+  .t-line { display: flex; gap: 12px; }
+  .t-prompt { color: var(--gold); opacity: 0.7; }
+  .t-green { color: #4ade80; }
+  .t-blue { color: #60a5fa; }
+  .t-yellow { color: var(--gold-light); }
+  .t-gray { color: var(--gray); }
+  .t-white { color: var(--white); }
+
+  .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 14px;
+    background: var(--gold);
+    animation: blink 1s step-end infinite;
+    vertical-align: middle;
+    margin-left: 2px;
+  }
+
+  /* ── FAQ / NOTICE ── */
+  .notice-section {
+    background: rgba(255,255,255,0.015);
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .notice-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .notice-inner .section-tag { justify-content: center; }
+  .notice-inner .section-tag::after { display: none; }
+
+  .notice-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 64px;
+    text-align: left;
+  }
+
+  .notice-item {
+    padding: 32px;
+    background: rgba(10,10,10,0.8);
+    border: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .notice-q {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: var(--white);
+  }
+
+  .notice-a {
+    font-size: 13px;
+    color: rgba(245,242,238,0.5);
+    line-height: 1.8;
+  }
+
+  /* ── FOOTER CTA ── */
+  .footer-cta {
+    text-align: center;
+    padding: 160px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .footer-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(201,168,76,0.07) 0%, transparent 70%);
+  }
+
+  .footer-cta-title {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 900;
+    font-size: clamp(40px, 6vw, 80px);
+    line-height: 1.1;
+    margin-bottom: 32px;
+    position: relative;
+  }
+
+  .footer-cta-sub {
+    font-size: 16px;
+    color: rgba(245,242,238,0.5);
+    margin-bottom: 48px;
+    position: relative;
+  }
+
+  .footer-cta .cta-btns {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 40px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-brand {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+  }
+
+  .footer-copy {
+    font-size: 12px;
+    color: var(--gray);
+    letter-spacing: 0.05em;
+  }
+
+  .footer-line {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--gray);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes expandLine {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 20px 24px; }
+    .nav-links { display: none; }
+    section { padding: 80px 24px; }
+    .hero { padding: 100px 24px 60px; }
+    .problem { grid-template-columns: 1fr; gap: 48px; }
+    .features-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .trial-inner { grid-template-columns: 1fr; gap: 48px; }
+    .notice-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+
+    /* 目標用戶區塊：手機版改為單欄 */
+    .who-grid { grid-template-columns: 1fr !important; }
+
+    /* 風險聲明區塊：手機版 risk 卡片單欄 */
+    .risk-grid { grid-template-columns: 1fr !important; }
+
+    /* 風險聲明整體左右 padding 縮小 */
+    .risk-section { padding: 60px 24px !important; }
+
+    /* 目標用戶 section padding */
+    .who-section { padding: 80px 24px !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">A.Z.N.G. × Threads</div>
+  <ul class="nav-links">
+    <li><a href="#who">對象</a></li>
+    <li><a href="#features">功能</a></li>
+    <li><a href="#pricing">定價</a></li>
+    <li><a href="#trial">試用</a></li>
+    <li><a href="#contact">聯絡</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <p class="hero-tag">AZ Nagin Group · 2026</p>
+  <h1 class="hero-title">
+    <span class="line-gold">Threads</span><br>
+    <span>輔助化</span><br>
+    <span class="line-dim">發文系統</span>
+  </h1>
+  <p class="hero-sub">
+    讓演算法為你工作。<br>
+    每日排程發文、智慧巡邏通知、關鍵字回覆輔助——<br>
+    你只需要專注在內容本身。
+  </p>
+  <div class="hero-cta">
+    <a href="#trial" class="btn-primary">申請試用 →</a>
+    <a href="#features" class="btn-outline">了解功能</a>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">輔助發文 <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">智慧排程 <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">通知巡邏 <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">關鍵字回覆 <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">輔助按讚 <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Google Sheets 整合 <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Windows 通知 <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">輔助發文 <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">智慧排程 <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">通知巡邏 <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">關鍵字回覆 <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">輔助按讚 <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Google Sheets 整合 <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Windows 通知 <span class="ticker-sep">✦</span></span>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="problem reveal">
+    <div class="problem-text">
+      <p class="section-tag">Pain Points</p>
+      <h2 class="section-title">你是不是也有<br>這些困擾？</h2>
+      <p>想認真經營 Threads，但每天要想內容、定時發文、還要回覆留言，光是這樣就已經精疲力竭。</p>
+      <p>更別說演算法還偏好固定時間、持續互動的帳號——你越忙越沒空顧，帳號就越沉寂。</p>
+    </div>
+    <div class="problem-visual">
+      <div class="pain-points">
+        <div class="pain-point">
+          <div class="pain-point-num">01 —</div>
+          <div class="pain-point-text">每天都要手動發文，一忙就忘，帳號活躍度直接歸零</div>
+        </div>
+        <div class="pain-point">
+          <div class="pain-point-num">02 —</div>
+          <div class="pain-point-text">留言通知一堆，想一一回覆根本沒時間，錯過互動機會</div>
+        </div>
+        <div class="pain-point">
+          <div class="pain-point-num">03 —</div>
+          <div class="pain-point-text">知道要持續互動才能成長，但就是執行不了</div>
+        </div>
+        <div class="pain-point">
+          <div class="pain-point-num">04 —</div>
+          <div class="pain-point-text">準備了一堆素材，卻不知道怎麼系統性地安排發文</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IS IT FOR -->
+<section id="who" class="who-section" style="padding: 120px 48px; border-top: 1px solid rgba(255,255,255,0.06);">
+  <div style="max-width: 1200px; margin: 0 auto;">
+    <div class="reveal" style="text-align:center; margin-bottom: 80px;">
+      <p class="section-tag" style="justify-content:center;">Who It's For</p>
+      <h2 class="section-title">這套系統<br>為誰而生？</h2>
+      <p style="color:rgba(245,242,238,0.5); font-size:15px; margin-top:16px; max-width:500px; margin-left:auto; margin-right:auto; line-height:1.8;">只要你有在 Threads 上持續曝光的需求，這套系統就是為你設計的。</p>
+    </div>
+    <div class="reveal who-grid" style="display:grid; grid-template-columns: repeat(3,1fr); gap: 2px;">
+      <div style="padding: 48px 36px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s;" onmouseover="this.style.background='rgba(201,168,76,0.05)'" onmouseout="this.style.background='rgba(255,255,255,0.02)'">
+        <div style="font-size:36px; margin-bottom:24px;">🏪</div>
+        <h3 style="font-family:'Noto Serif TC',serif; font-weight:700; font-size:20px; margin-bottom:16px; line-height:1.4;">實體商家<br>品牌帳號</h3>
+        <p style="font-size:13px; color:rgba(245,242,238,0.5); line-height:1.8;">餐廳、服飾、美容、手作等實體店家，想透過 Threads 持續曝光但沒有專職小編，這套系統幫你維持每日更新頻率。</p>
+      </div>
+      <div style="padding: 48px 36px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s;" onmouseover="this.style.background='rgba(201,168,76,0.05)'" onmouseout="this.style.background='rgba(255,255,255,0.02)'">
+        <div style="font-size:36px; margin-bottom:24px;">🛍️</div>
+        <h3 style="font-family:'Noto Serif TC',serif; font-weight:700; font-size:20px; margin-bottom:16px; line-height:1.4;">蝦皮分潤<br>聯盟行銷</h3>
+        <p style="font-size:13px; color:rgba(245,242,238,0.5); line-height:1.8;">做蝦皮分潤、聯盟行銷的創作者，需要大量、持續的內容輸出來帶動流量。本系統幫你穩定推送，不中斷曝光節奏。</p>
+      </div>
+      <div style="padding: 48px 36px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s;" onmouseover="this.style.background='rgba(201,168,76,0.05)'" onmouseout="this.style.background='rgba(255,255,255,0.02)'">
+        <div style="font-size:36px; margin-bottom:24px;">📱</div>
+        <h3 style="font-family:'Noto Serif TC',serif; font-weight:700; font-size:20px; margin-bottom:16px; line-height:1.4;">個人品牌<br>KOL 創作者</h3>
+        <p style="font-size:13px; color:rgba(245,242,238,0.5); line-height:1.8;">正在建立個人品牌的創作者，深知持續發文的重要性，卻被日常事務分心。讓這套系統幫你維持存在感。</p>
+      </div>
+      <div style="padding: 48px 36px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s;" onmouseover="this.style.background='rgba(201,168,76,0.05)'" onmouseout="this.style.background='rgba(255,255,255,0.02)'">
+        <div style="font-size:36px; margin-bottom:24px;">💼</div>
+        <h3 style="font-family:'Noto Serif TC',serif; font-weight:700; font-size:20px; margin-bottom:16px; line-height:1.4;">接案者<br>自由工作者</h3>
+        <p style="font-size:13px; color:rgba(245,242,238,0.5); line-height:1.8;">用 Threads 拓展客源的接案設計師、攝影師、顧問等，需要穩定的內容流吸引潛在客戶，本系統讓你專心交付成果。</p>
+      </div>
+      <div style="padding: 48px 36px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s;" onmouseover="this.style.background='rgba(201,168,76,0.05)'" onmouseout="this.style.background='rgba(255,255,255,0.02)'">
+        <div style="font-size:36px; margin-bottom:24px;">🎓</div>
+        <h3 style="font-family:'Noto Serif TC',serif; font-weight:700; font-size:20px; margin-bottom:16px; line-height:1.4;">知識型內容<br>課程銷售者</h3>
+        <p style="font-size:13px; color:rgba(245,242,238,0.5); line-height:1.8;">線上課程、電子書、訂閱制內容的經營者，透過持續輸出專業知識建立信任，本系統幫你維持高頻率的內容發佈。</p>
+      </div>
+      <div style="padding: 48px 36px; background: rgba(201,168,76,0.04); border: 1px solid rgba(201,168,76,0.2); transition: all 0.3s;" onmouseover="this.style.background='rgba(201,168,76,0.08)'" onmouseout="this.style.background='rgba(201,168,76,0.04)'">
+        <div style="font-size:36px; margin-bottom:24px;">✦</div>
+        <h3 style="font-family:'Noto Serif TC',serif; font-weight:700; font-size:20px; margin-bottom:16px; line-height:1.4; color:var(--gold);">只要你<br>想被看見</h3>
+        <p style="font-size:13px; color:rgba(245,242,238,0.5); line-height:1.8;">無論什麼身份，只要你認同「持續曝光才能成長」這件事，卻苦於時間不夠——這套系統就是為你而生。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section" id="features">
+  <div class="features-header reveal">
+    <p class="section-tag" style="justify-content:center; text-align:center">Core Features</p>
+    <h2 class="section-title" style="text-align:center">一套工具<br>解決所有問題</h2>
+  </div>
+  <div class="features-grid reveal">
+    <div class="feature-card">
+      <span class="feature-icon">📅</span>
+      <div class="feature-num">01 / 發文系統</div>
+      <h3 class="feature-title">智慧排程<br>輔助發文</h3>
+      <p class="feature-desc">從 Google Sheets 讀取貼文內容，在你設定的活躍時段內定時發佈，支援圖片、影片附件，發文後還能同步附加留言補充資訊。</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🔍</span>
+      <div class="feature-num">02 / 巡邏系統</div>
+      <h3 class="feature-title">定時掃描<br>不漏通知</h3>
+      <p class="feature-desc">每隔固定時間定時前往通知頁面，精準識別留言通知，儲存待處理任務清單，讓你不再錯過任何互動機會。</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">💬</span>
+      <div class="feature-num">03 / 互動系統</div>
+      <h3 class="feature-title">關鍵字回覆<br>輔助按讚</h3>
+      <p class="feature-desc">偵測到留言中的關鍵字，協助送出預設回覆；同時對所有新留言輔助按讚，維持高互動率，讓演算法持續推送你的內容。</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">📊</span>
+      <div class="feature-num">04 / 數據整合</div>
+      <h3 class="feature-title">Google Sheets<br>輕鬆管理</h3>
+      <p class="feature-desc">用你熟悉的試算表管理所有發文素材、留言清單，發文記錄同步寫回 Sheets，隨時掌握發文狀況。</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🖥️</span>
+      <div class="feature-num">05 / 操作介面</div>
+      <h3 class="feature-title">直覺 UI<br>即時監控</h3>
+      <p class="feature-desc">清晰的狀態儀表板、發文預覽、即時 log——所有系統動態一目了然，操作簡單，不需要任何程式知識。</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🔔</span>
+      <div class="feature-num">06 / 通知推播</div>
+      <h3 class="feature-title">Windows 通知<br>隨時掌握</h3>
+      <p class="feature-desc">發文成功、巡邏完成，系統推播 Windows 通知，即使最小化也不會錯過任何重要事件。</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="how-inner reveal">
+    <p class="section-tag">How It Works</p>
+    <h2 class="section-title">三步驟<br>開始運作</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">STEP 01</div>
+        <div class="step-content">
+          <h3 class="step-title">填入 Google Sheets</h3>
+          <p class="step-desc">在我們提供的試算表模板中填入你的貼文內容、預設留言回覆關鍵字，上傳你的媒體素材到指定資料夾，一次設定好就不用再管。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">STEP 02</div>
+        <div class="step-content">
+          <h3 class="step-title">啟動系統，設定排程</h3>
+          <p class="step-desc">開啟程式，設定每日發文數量、活躍時段、巡邏頻率。按下啟動，系統就會在背景持續運作，不需要你盯著螢幕。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">STEP 03</div>
+        <div class="step-content">
+          <h3 class="step-title">按需執行互動</h3>
+          <p class="step-desc">巡邏完成後，系統會整理好待互動清單。你隨時可以手動觸發批次互動，讓系統一次完成所有按讚與關鍵字回覆。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="pricing-header reveal">
+    <p class="section-tag">Pricing</p>
+    <h2 class="section-title">簡單透明<br>的定價方案</h2>
+  </div>
+  <div class="pricing-grid reveal">
+    <div class="price-card">
+      <div class="price-label">試用轉訂閱優惠</div>
+      <div class="price-amount">$499<span>/月</span></div>
+      <div class="price-period">提供試用回饋者專屬</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li>完整功能無限制使用</li>
+        <li>14天試用期間提供使用回饋</li>
+        <li>LINE 客服支援</li>
+        <li>系統更新通知</li>
+        <li>功能持續迭代更新</li>
+      </ul>
+      <a href="#trial" class="btn-outline" style="width:100%; text-align:center; display:block;">申請試用</a>
+    </div>
+    <div class="price-card featured">
+      <div class="price-label">新用戶首月訂閱</div>
+      <div class="price-amount">$699<span>/月</span></div>
+      <div class="price-period">首月限定優惠價格</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li>完整功能無限制使用</li>
+        <li>單一帳號授權</li>
+        <li>LINE 客服支援</li>
+        <li>系統更新通知</li>
+        <li>維護通知提前告知</li>
+        <li>功能持續迭代更新</li>
+      </ul>
+      <a href="#contact" class="btn-primary" style="width:100%; text-align:center; display:block;">立即訂閱</a>
+    </div>
+    <div class="price-card">
+      <div class="price-label">正式月費</div>
+      <div class="price-amount">$999<span>/月</span></div>
+      <div class="price-period">穩定上線後定價</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li>完整功能無限制使用</li>
+        <li>單一帳號授權</li>
+        <li>LINE 客服支援</li>
+        <li>系統更新通知</li>
+        <li>推薦新用戶成功 當月享 $499</li>
+        <li>功能持續迭代更新</li>
+      </ul>
+      <a href="#contact" class="btn-outline" style="width:100%; text-align:center; display:block;">聯絡我們</a>
+    </div>
+  </div>
+  <p style="text-align:center; margin-top:32px; font-size:12px; color:var(--gray); font-family:'Space Mono',monospace; letter-spacing:0.1em;">
+    加購帳號金鑰 $299 · 推薦新用戶訂閱當月享 $499
+  </p>
+</section>
+
+<!-- TRIAL -->
+<section class="trial-section" id="trial">
+  <div class="trial-inner reveal">
+    <div class="trial-text">
+      <p class="section-tag">Free Trial</p>
+      <h2 class="section-title">首批試用<br>名額開放中</h2>
+      <p>我們正在進行首批 5～10 人的完整試用計劃，試用期間享有完整功能，無任何限制。</p>
+      <p>試用結束後提供使用回饋，即可享有最低 $499/月 的訂閱優惠。</p>
+      <div class="trial-conditions">
+        <div class="trial-conditions-title">試用條件</div>
+        <ul>
+          <li>試用期間：14 天完整版</li>
+          <li>名額限制：首批 5～10 人</li>
+          <li>回饋要求：提供使用截圖與心得</li>
+          <li>平台：Windows 系統</li>
+        </ul>
+      </div>
+      <div style="margin-top:36px;">
+        <a href="#contact" class="btn-primary">加入試用 →</a>
+      </div>
+    </div>
+    <div class="trial-visual">
+      <div class="terminal-mock">
+        <div class="terminal-bar">
+          <div class="terminal-dot red"></div>
+          <div class="terminal-dot yellow"></div>
+          <div class="terminal-dot green"></div>
+          <span class="terminal-title">A.Z.N.G. Threads Bot · v1.0</span>
+        </div>
+        <div class="terminal-body">
+          <div class="t-line"><span class="t-prompt">›</span><span class="t-green">✅ 瀏覽器已啟動並保持開啟</span></div>
+          <div class="t-line"><span class="t-prompt">›</span><span class="t-blue">🔍 巡邏系統啟動</span></div>
+          <div class="t-line"><span class="t-prompt">›</span><span class="t-gray">找到 18 則通知</span></div>
+          <div class="t-line"><span class="t-prompt">›</span><span class="t-green">✅ [1] azaz_0726 → 只按讚</span></div>
+          <div class="t-line"><span class="t-prompt">›</span><span class="t-green">✅ [3] azaz_0726 → 按讚+回覆</span></div>
+          <div class="t-line"><span class="t-prompt">›</span><span class="t-yellow">🔍 巡邏完成，新增 5 則任務</span></div>
+          <div class="t-line"><span class="t-prompt">›</span><span class="t-blue">🤝 開始批次互動</span></div>
+          <div class="t-line"><span class="t-prompt">›</span><span class="t-green">✅ 按讚完成</span></div>
+          <div class="t-line"><span class="t-prompt">›</span><span class="t-green">✅ 互動完成：處理 5 個</span></div>
+          <div class="t-line"><span class="t-prompt">›</span><span class="t-yellow">📝 發文中...</span></div>
+          <div class="t-line"><span class="t-prompt">›</span><span class="t-green">✅ 發文成功</span></div>
+          <div class="t-line"><span class="t-prompt">›</span><span class="t-gray">下次發文：14:30:00 <span class="cursor"></span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RISK DISCLAIMER -->
+<section class="risk-section" style="padding: 80px 48px; background: rgba(192,57,43,0.04); border-top: 1px solid rgba(192,57,43,0.15); border-bottom: 1px solid rgba(192,57,43,0.15);">
+  <div style="max-width: 900px; margin: 0 auto;" class="reveal">
+    <div style="display:flex; gap:24px; align-items:flex-start;">
+      <div style="font-size:28px; flex-shrink:0; margin-top:4px;">⚠️</div>
+      <div>
+        <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.4em; color:#c0392b; text-transform:uppercase; margin-bottom:16px;">使用前請閱讀</p>
+        <h3 style="font-family:'Noto Serif TC',serif; font-weight:700; font-size:24px; margin-bottom:20px; line-height:1.4;">誠實告知：使用輔助工具的風險</h3>
+        <p style="font-size:14px; color:rgba(245,242,238,0.6); line-height:1.9; margin-bottom:16px;">
+          本系統採用瀏覽器模擬操作，雖已盡力仿照真人使用節奏（隨機延遲、模擬打字速度、分散操作時間），但 <strong style="color:rgba(245,242,238,0.85);">仍有一定機率觸發平台的異常偵測機制</strong>，導致帳號被限流、暫停或封鎖。
+        </p>
+        <p style="font-size:14px; color:rgba(245,242,238,0.6); line-height:1.9; margin-bottom:24px;">
+          我們建議以<strong style="color:rgba(245,242,238,0.85);">合理的頻率</strong>使用本系統，避免短時間內大量操作。若帳號出現異常，請立即停止使用並等待平台解除限制。
+        </p>
+        <div class="risk-grid" style="display:grid; grid-template-columns: repeat(3,1fr); gap:2px;">
+          <div style="padding:20px 24px; background:rgba(192,57,43,0.06); border:1px solid rgba(192,57,43,0.15);">
+            <div style="font-family:'Space Mono',monospace; font-size:10px; color:#c0392b; letter-spacing:0.2em; margin-bottom:8px;">RISK 01</div>
+            <div style="font-size:13px; color:rgba(245,242,238,0.6); line-height:1.6;">帳號可能遭平台限流或暫時封鎖</div>
+          </div>
+          <div style="padding:20px 24px; background:rgba(192,57,43,0.06); border:1px solid rgba(192,57,43,0.15);">
+            <div style="font-family:'Space Mono',monospace; font-size:10px; color:#c0392b; letter-spacing:0.2em; margin-bottom:8px;">RISK 02</div>
+            <div style="font-size:13px; color:rgba(245,242,238,0.6); line-height:1.6;">平台規則隨時可能調整影響功能運作</div>
+          </div>
+          <div style="padding:20px 24px; background:rgba(192,57,43,0.06); border:1px solid rgba(192,57,43,0.15);">
+            <div style="font-family:'Space Mono',monospace; font-size:10px; color:#c0392b; letter-spacing:0.2em; margin-bottom:8px;">RISK 03</div>
+            <div style="font-size:13px; color:rgba(245,242,238,0.6); line-height:1.6;">使用者需自行承擔帳號相關風險</div>
+          </div>
+        </div>
+        <p style="margin-top:20px; font-family:'Space Mono',monospace; font-size:11px; color:rgba(245,242,238,0.3); letter-spacing:0.1em; line-height:1.8;">
+          購買即代表了解並接受上述風險。本系統不保證帳號安全，亦不對因使用本系統而造成的帳號損失負責。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NOTICE -->
+<section class="notice-section" id="faq">
+  <div class="notice-inner reveal">
+    <p class="section-tag">FAQ</p>
+    <h2 class="section-title">常見問題</h2>
+    <div class="notice-grid">
+      <div class="notice-item">
+        <div class="notice-q">需要自己的 Threads 帳號嗎？</div>
+        <div class="notice-a">是的，本系統需搭配你自己的 Threads 帳號使用，系統會在你的帳號上執行操作。</div>
+      </div>
+      <div class="notice-item">
+        <div class="notice-q">會不會有被封鎖的風險？</div>
+        <div class="notice-a">系統採用仿人工操作節奏，隨機延遲、模擬真人打字速度，降低被偵測的風險，但仍需合理使用。</div>
+      </div>
+      <div class="notice-item">
+        <div class="notice-q">需要什麼系統環境？</div>
+        <div class="notice-a">目前僅支援 Windows 系統，需要保持電腦開機並聯網，程式在背景持續運作。</div>
+      </div>
+      <div class="notice-item">
+        <div class="notice-q">客服如何聯絡？</div>
+        <div class="notice-a">透過 LINE 官方帳號聯繫，系統維護會提前 2～3 小時通知，維護時間以半夜為主。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER CTA -->
+<section class="footer-cta" id="contact">
+  <h2 class="footer-cta-title">準備好了嗎？<br><span style="color:var(--gold)">讓系統替你工作。</span></h2>
+  <p class="footer-cta-sub">加入 LINE 官方帳號，申請試用或了解更多詳情</p>
+  <div class="cta-btns">
+    <a href="#" class="btn-primary">加入 LINE 官方帳號 →</a>
+    <a href="#trial" class="btn-outline">了解試用方案</a>
+  </div>
+  <p style="margin-top:48px; font-family:'Space Mono',monospace; font-size:11px; color:var(--gray); letter-spacing:0.2em;">
+    @a.z.n.g.888 · AZ Nagin Group · 2026
+  </p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">A.Z.N.G.</div>
+  <div class="footer-copy">© 2026 AZ Nagin Group. All rights reserved.</div>
+  <div class="footer-line">Threads · @a.z.n.g.888</div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
