@@ -17,11 +17,11 @@
     --gray: #888;
     --gray-light: #bbb;
   }
-
+ 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
   html { scroll-behavior: smooth; }
-
+ 
   body {
     background: var(--black);
     color: var(--white);
@@ -29,7 +29,7 @@
     font-weight: 300;
     overflow-x: hidden;
   }
-
+ 
   /* ── NOISE OVERLAY ── */
   body::before {
     content: '';
@@ -40,7 +40,7 @@
     z-index: 9999;
     opacity: 0.6;
   }
-
+ 
   /* ── NAV ── */
   nav {
     position: fixed;
@@ -55,7 +55,7 @@
     -webkit-backdrop-filter: blur(20px);
     background: rgba(10,10,10,0.92);
   }
-
+ 
   .nav-logo {
     font-family: 'Space Mono', monospace;
     font-size: 13px;
@@ -63,13 +63,13 @@
     color: var(--gold);
     text-transform: uppercase;
   }
-
+ 
   .nav-links {
     display: flex;
     gap: 36px;
     list-style: none;
   }
-
+ 
   .nav-links a {
     color: var(--gray-light);
     text-decoration: none;
@@ -78,9 +78,9 @@
     text-transform: uppercase;
     transition: color 0.3s;
   }
-
+ 
   .nav-links a:hover { color: var(--white); }
-
+ 
   /* ── HERO ── */
   .hero {
     min-height: 100vh;
@@ -91,7 +91,7 @@
     position: relative;
     overflow: hidden;
   }
-
+ 
   .hero-bg {
     position: absolute;
     inset: 0;
@@ -99,7 +99,7 @@
       radial-gradient(ellipse 60% 50% at 80% 50%, rgba(201,168,76,0.08) 0%, transparent 70%),
       radial-gradient(ellipse 40% 60% at 10% 80%, rgba(192,57,43,0.06) 0%, transparent 60%);
   }
-
+ 
   .hero-tag {
     font-family: 'Space Mono', monospace;
     font-size: 11px;
@@ -110,7 +110,7 @@
     opacity: 0;
     animation: fadeUp 0.8s ease forwards 0.2s;
   }
-
+ 
   .hero-title {
     font-family: 'Noto Serif TC', serif;
     font-weight: 900;
@@ -121,10 +121,10 @@
     opacity: 0;
     animation: fadeUp 0.8s ease forwards 0.4s;
   }
-
+ 
   .hero-title .line-gold { color: var(--gold); }
   .hero-title .line-dim { color: rgba(245,242,238,0.25); }
-
+ 
   .hero-sub {
     max-width: 520px;
     font-size: 16px;
@@ -134,7 +134,7 @@
     opacity: 0;
     animation: fadeUp 0.8s ease forwards 0.6s;
   }
-
+ 
   .hero-cta {
     display: flex;
     gap: 16px;
@@ -142,7 +142,7 @@
     opacity: 0;
     animation: fadeUp 0.8s ease forwards 0.8s;
   }
-
+ 
   .btn-primary {
     background: var(--gold);
     color: var(--black);
@@ -157,12 +157,12 @@
     transition: all 0.3s;
     display: inline-block;
   }
-
+ 
   .btn-primary:hover {
     background: var(--gold-light);
     transform: translateY(-2px);
   }
-
+ 
   .btn-outline {
     border: 1px solid rgba(245,242,238,0.2);
     color: var(--white);
@@ -175,12 +175,12 @@
     transition: all 0.3s;
     display: inline-block;
   }
-
+ 
   .btn-outline:hover {
     border-color: var(--gold);
     color: var(--gold);
   }
-
+ 
   .hero-scroll {
     position: absolute;
     bottom: 40px;
@@ -196,7 +196,7 @@
     animation: fadeIn 1s ease forwards 1.2s;
     opacity: 0;
   }
-
+ 
   .scroll-line {
     width: 40px;
     height: 1px;
@@ -205,7 +205,7 @@
     transform-origin: left;
     transform: scaleX(0);
   }
-
+ 
   /* ── TICKER ── */
   .ticker {
     border-top: 1px solid rgba(255,255,255,0.08);
@@ -214,14 +214,14 @@
     overflow: hidden;
     background: rgba(201,168,76,0.04);
   }
-
+ 
   .ticker-inner {
     display: flex;
     gap: 80px;
     animation: ticker 20s linear infinite;
     white-space: nowrap;
   }
-
+ 
   .ticker-item {
     font-family: 'Space Mono', monospace;
     font-size: 11px;
@@ -230,14 +230,14 @@
     text-transform: uppercase;
     flex-shrink: 0;
   }
-
+ 
   .ticker-sep {
     color: rgba(201,168,76,0.3);
   }
-
+ 
   /* ── SECTION COMMON ── */
   section { padding: 120px 48px; }
-
+ 
   .section-tag {
     font-family: 'Space Mono', monospace;
     font-size: 10px;
@@ -249,7 +249,7 @@
     align-items: center;
     gap: 16px;
   }
-
+ 
   .section-tag::after {
     content: '';
     flex: 1;
@@ -258,7 +258,7 @@
     background: var(--gold);
     opacity: 0.4;
   }
-
+ 
   .section-title {
     font-family: 'Noto Serif TC', serif;
     font-weight: 700;
@@ -266,7 +266,7 @@
     line-height: 1.15;
     margin-bottom: 24px;
   }
-
+ 
   /* ── PROBLEM ── */
   .problem {
     display: grid;
@@ -276,26 +276,26 @@
     max-width: 1200px;
     margin: 0 auto;
   }
-
+ 
   .problem-text { max-width: 480px; }
-
+ 
   .problem-text p {
     color: rgba(245,242,238,0.6);
     font-size: 16px;
     line-height: 1.9;
     margin-bottom: 20px;
   }
-
+ 
   .problem-visual {
     position: relative;
   }
-
+ 
   .pain-points {
     display: flex;
     flex-direction: column;
     gap: 1px;
   }
-
+ 
   .pain-point {
     padding: 24px 28px;
     background: rgba(255,255,255,0.03);
@@ -303,12 +303,12 @@
     transition: all 0.3s;
     cursor: default;
   }
-
+ 
   .pain-point:hover {
     background: rgba(255,255,255,0.06);
     border-left-color: var(--red);
   }
-
+ 
   .pain-point-num {
     font-family: 'Space Mono', monospace;
     font-size: 10px;
@@ -316,26 +316,26 @@
     letter-spacing: 0.2em;
     margin-bottom: 8px;
   }
-
+ 
   .pain-point-text {
     font-size: 14px;
     color: rgba(245,242,238,0.7);
     line-height: 1.6;
   }
-
+ 
   /* ── FEATURES ── */
   .features-section {
     background: rgba(255,255,255,0.015);
     border-top: 1px solid rgba(255,255,255,0.06);
     border-bottom: 1px solid rgba(255,255,255,0.06);
   }
-
+ 
   .features-header {
     max-width: 1200px;
     margin: 0 auto 80px;
     text-align: center;
   }
-
+ 
   .features-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -343,7 +343,7 @@
     max-width: 1200px;
     margin: 0 auto;
   }
-
+ 
   .feature-card {
     padding: 48px 36px;
     background: rgba(10,10,10,0.8);
@@ -353,7 +353,7 @@
     transition: all 0.4s;
     cursor: default;
   }
-
+ 
   .feature-card::before {
     content: '';
     position: absolute;
@@ -364,20 +364,20 @@
     transform-origin: left;
     transition: transform 0.4s;
   }
-
+ 
   .feature-card:hover::before { transform: scaleX(1); }
-
+ 
   .feature-card:hover {
     background: rgba(201,168,76,0.04);
     transform: translateY(-4px);
   }
-
+ 
   .feature-icon {
     font-size: 32px;
     margin-bottom: 24px;
     display: block;
   }
-
+ 
   .feature-num {
     font-family: 'Space Mono', monospace;
     font-size: 10px;
@@ -386,7 +386,7 @@
     margin-bottom: 16px;
     opacity: 0.6;
   }
-
+ 
   .feature-title {
     font-family: 'Noto Serif TC', serif;
     font-weight: 700;
@@ -394,19 +394,19 @@
     margin-bottom: 16px;
     line-height: 1.4;
   }
-
+ 
   .feature-desc {
     font-size: 13px;
     color: rgba(245,242,238,0.5);
     line-height: 1.8;
   }
-
+ 
   /* ── HOW IT WORKS ── */
   .how-inner {
     max-width: 900px;
     margin: 0 auto;
   }
-
+ 
   .steps {
     display: flex;
     flex-direction: column;
@@ -414,7 +414,7 @@
     margin-top: 64px;
     position: relative;
   }
-
+ 
   .steps::before {
     content: '';
     position: absolute;
@@ -424,7 +424,7 @@
     background: linear-gradient(to bottom, var(--gold), transparent);
     opacity: 0.2;
   }
-
+ 
   .step {
     display: flex;
     gap: 40px;
@@ -432,11 +432,11 @@
     border-bottom: 1px solid rgba(255,255,255,0.05);
     transition: all 0.3s;
   }
-
+ 
   .step:last-child { border-bottom: none; }
-
+ 
   .step:hover .step-num { color: var(--gold); }
-
+ 
   .step-num {
     font-family: 'Space Mono', monospace;
     font-size: 11px;
@@ -446,32 +446,32 @@
     padding-top: 4px;
     transition: color 0.3s;
   }
-
+ 
   .step-content {}
-
+ 
   .step-title {
     font-family: 'Noto Serif TC', serif;
     font-weight: 700;
     font-size: 22px;
     margin-bottom: 12px;
   }
-
+ 
   .step-desc {
     font-size: 14px;
     color: rgba(245,242,238,0.5);
     line-height: 1.8;
   }
-
+ 
   /* ── PRICING ── */
   .pricing-section {
     background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.03), transparent);
   }
-
+ 
   .pricing-header {
     max-width: 1200px;
     margin: 0 auto 80px;
   }
-
+ 
   .pricing-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -479,22 +479,20 @@
     max-width: 1200px;
     margin: 0 auto;
   }
-
+ 
   .price-card {
     padding: 48px 36px;
     background: rgba(255,255,255,0.02);
     border: 1px solid rgba(255,255,255,0.06);
     position: relative;
     transition: all 0.3s;
-    display: flex;
-    flex-direction: column;
   }
-
+ 
   .price-card.featured {
     background: rgba(201,168,76,0.06);
     border-color: rgba(201,168,76,0.3);
   }
-
+ 
   .price-card.featured::after {
     content: '推薦';
     position: absolute;
@@ -507,7 +505,7 @@
     padding: 6px 14px;
     text-transform: uppercase;
   }
-
+ 
   .price-label {
     font-family: 'Space Mono', monospace;
     font-size: 10px;
@@ -516,7 +514,7 @@
     text-transform: uppercase;
     margin-bottom: 20px;
   }
-
+ 
   .price-amount {
     font-family: 'Noto Serif TC', serif;
     font-size: 52px;
@@ -525,34 +523,33 @@
     line-height: 1;
     margin-bottom: 8px;
   }
-
+ 
   .price-amount span {
     font-size: 20px;
     color: var(--gray);
     font-weight: 400;
   }
-
+ 
   .price-period {
     font-size: 13px;
     color: var(--gray);
     margin-bottom: 36px;
   }
-
+ 
   .price-divider {
     height: 1px;
     background: rgba(255,255,255,0.08);
     margin-bottom: 32px;
   }
-
+ 
   .price-features {
     list-style: none;
     display: flex;
     flex-direction: column;
     gap: 14px;
     margin-bottom: 40px;
-    flex: 1;
   }
-
+ 
   .price-features li {
     font-size: 13px;
     color: rgba(245,242,238,0.6);
@@ -561,7 +558,7 @@
     gap: 10px;
     line-height: 1.5;
   }
-
+ 
   .price-features li::before {
     content: '—';
     color: var(--gold);
@@ -570,12 +567,12 @@
     font-size: 11px;
     margin-top: 1px;
   }
-
+ 
   /* ── TRIAL ── */
   .trial-section {
     border-top: 1px solid rgba(255,255,255,0.06);
   }
-
+ 
   .trial-inner {
     max-width: 1200px;
     margin: 0 auto;
@@ -584,23 +581,23 @@
     gap: 100px;
     align-items: center;
   }
-
+ 
   .trial-text .section-title { font-size: clamp(28px, 3vw, 44px); }
-
+ 
   .trial-text p {
     color: rgba(245,242,238,0.55);
     font-size: 15px;
     line-height: 1.9;
     margin-bottom: 16px;
   }
-
+ 
   .trial-conditions {
     margin-top: 36px;
     padding: 28px;
     border: 1px solid rgba(201,168,76,0.2);
     background: rgba(201,168,76,0.03);
   }
-
+ 
   .trial-conditions-title {
     font-family: 'Space Mono', monospace;
     font-size: 10px;
@@ -609,32 +606,32 @@
     text-transform: uppercase;
     margin-bottom: 16px;
   }
-
+ 
   .trial-conditions ul {
     list-style: none;
     display: flex;
     flex-direction: column;
     gap: 10px;
   }
-
+ 
   .trial-conditions li {
     font-size: 13px;
     color: rgba(245,242,238,0.6);
     display: flex;
     gap: 10px;
   }
-
+ 
   .trial-conditions li::before {
     content: '✦';
     color: var(--gold);
     font-size: 10px;
     margin-top: 2px;
   }
-
+ 
   .trial-visual {
     position: relative;
   }
-
+ 
   .terminal-mock {
     background: #0d0d0d;
     border: 1px solid rgba(255,255,255,0.1);
@@ -642,7 +639,7 @@
     font-family: 'Space Mono', monospace;
     overflow: hidden;
   }
-
+ 
   .terminal-bar {
     background: rgba(255,255,255,0.05);
     padding: 12px 16px;
@@ -651,29 +648,29 @@
     align-items: center;
     border-bottom: 1px solid rgba(255,255,255,0.06);
   }
-
+ 
   .terminal-dot {
     width: 10px; height: 10px;
     border-radius: 50%;
   }
-
+ 
   .terminal-dot.red { background: #ff5f57; }
   .terminal-dot.yellow { background: #ffbd2e; }
   .terminal-dot.green { background: #28ca41; }
-
+ 
   .terminal-title {
     font-size: 10px;
     color: var(--gray);
     letter-spacing: 0.15em;
     margin-left: 8px;
   }
-
+ 
   .terminal-body {
     padding: 24px;
     font-size: 12px;
     line-height: 2;
   }
-
+ 
   .t-line { display: flex; gap: 12px; }
   .t-prompt { color: var(--gold); opacity: 0.7; }
   .t-green { color: #4ade80; }
@@ -681,7 +678,7 @@
   .t-yellow { color: var(--gold-light); }
   .t-gray { color: var(--gray); }
   .t-white { color: var(--white); }
-
+ 
   .cursor {
     display: inline-block;
     width: 8px;
@@ -691,22 +688,22 @@
     vertical-align: middle;
     margin-left: 2px;
   }
-
+ 
   /* ── FAQ / NOTICE ── */
   .notice-section {
     background: rgba(255,255,255,0.015);
     border-top: 1px solid rgba(255,255,255,0.06);
   }
-
+ 
   .notice-inner {
     max-width: 800px;
     margin: 0 auto;
     text-align: center;
   }
-
+ 
   .notice-inner .section-tag { justify-content: center; }
   .notice-inner .section-tag::after { display: none; }
-
+ 
   .notice-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -714,13 +711,13 @@
     margin-top: 64px;
     text-align: left;
   }
-
+ 
   .notice-item {
     padding: 32px;
     background: rgba(10,10,10,0.8);
     border: 1px solid rgba(255,255,255,0.04);
   }
-
+ 
   .notice-q {
     font-family: 'Noto Serif TC', serif;
     font-weight: 700;
@@ -728,13 +725,13 @@
     margin-bottom: 12px;
     color: var(--white);
   }
-
+ 
   .notice-a {
     font-size: 13px;
     color: rgba(245,242,238,0.5);
     line-height: 1.8;
   }
-
+ 
   /* ── FOOTER CTA ── */
   .footer-cta {
     text-align: center;
@@ -742,14 +739,14 @@
     position: relative;
     overflow: hidden;
   }
-
+ 
   .footer-cta::before {
     content: '';
     position: absolute;
     inset: 0;
     background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(201,168,76,0.07) 0%, transparent 70%);
   }
-
+ 
   .footer-cta-title {
     font-family: 'Noto Serif TC', serif;
     font-weight: 900;
@@ -758,14 +755,14 @@
     margin-bottom: 32px;
     position: relative;
   }
-
+ 
   .footer-cta-sub {
     font-size: 16px;
     color: rgba(245,242,238,0.5);
     margin-bottom: 48px;
     position: relative;
   }
-
+ 
   .footer-cta .cta-btns {
     display: flex;
     gap: 16px;
@@ -773,7 +770,7 @@
     flex-wrap: wrap;
     position: relative;
   }
-
+ 
   /* ── FOOTER ── */
   footer {
     border-top: 1px solid rgba(255,255,255,0.06);
@@ -782,65 +779,65 @@
     justify-content: space-between;
     align-items: center;
   }
-
+ 
   .footer-brand {
     font-family: 'Space Mono', monospace;
     font-size: 12px;
     letter-spacing: 0.3em;
     color: var(--gold);
   }
-
+ 
   .footer-copy {
     font-size: 12px;
     color: var(--gray);
     letter-spacing: 0.05em;
   }
-
+ 
   .footer-line {
     font-family: 'Space Mono', monospace;
     font-size: 11px;
     color: var(--gray);
     letter-spacing: 0.1em;
   }
-
+ 
   /* ── ANIMATIONS ── */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
   }
-
+ 
   @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
   }
-
+ 
   @keyframes expandLine {
     from { transform: scaleX(0); }
     to { transform: scaleX(1); }
   }
-
+ 
   @keyframes ticker {
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
   }
-
+ 
   @keyframes blink {
     0%, 100% { opacity: 1; }
     50% { opacity: 0; }
   }
-
+ 
   /* ── SCROLL REVEAL ── */
   .reveal {
     opacity: 0;
     transform: translateY(40px);
     transition: opacity 0.8s ease, transform 0.8s ease;
   }
-
+ 
   .reveal.visible {
     opacity: 1;
     transform: translateY(0);
   }
-
+ 
   /* ── RESPONSIVE ── */
   @media (max-width: 900px) {
     nav { padding: 20px 24px; }
@@ -853,23 +850,23 @@
     .trial-inner { grid-template-columns: 1fr; gap: 48px; }
     .notice-grid { grid-template-columns: 1fr; }
     footer { flex-direction: column; gap: 16px; text-align: center; }
-
+ 
     /* 目標用戶區塊：手機版改為單欄 */
     .who-grid { grid-template-columns: 1fr !important; }
-
+ 
     /* 風險聲明區塊：手機版 risk 卡片單欄 */
     .risk-grid { grid-template-columns: 1fr !important; }
-
+ 
     /* 風險聲明整體左右 padding 縮小 */
     .risk-section { padding: 60px 24px !important; }
-
+ 
     /* 目標用戶 section padding */
     .who-section { padding: 80px 24px !important; }
   }
 </style>
 </head>
 <body>
-
+ 
 <!-- NAV -->
 <nav>
   <div class="nav-logo">A.Z.N.G. × Threads</div>
@@ -881,7 +878,7 @@
     <li><a href="https://line.me/R/ti/p/@981zppdf" target="_blank">聯絡</a></li>
   </ul>
 </nav>
-
+ 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-bg"></div>
@@ -905,7 +902,7 @@
     Scroll
   </div>
 </section>
-
+ 
 <!-- TICKER -->
 <div class="ticker">
   <div class="ticker-inner">
@@ -925,7 +922,7 @@
     <span class="ticker-item">Windows 通知 <span class="ticker-sep">✦</span></span>
   </div>
 </div>
-
+ 
 <!-- PROBLEM -->
 <section id="problem">
   <div class="problem reveal">
@@ -957,7 +954,7 @@
     </div>
   </div>
 </section>
-
+ 
 <!-- WHO IS IT FOR -->
 <section id="who" class="who-section" style="padding: 120px 48px; border-top: 1px solid rgba(255,255,255,0.06);">
   <div style="max-width: 1200px; margin: 0 auto;">
@@ -1000,7 +997,7 @@
     </div>
   </div>
 </section>
-
+ 
 <!-- FEATURES -->
 <section class="features-section" id="features">
   <div class="features-header reveal">
@@ -1046,7 +1043,7 @@
     </div>
   </div>
 </section>
-
+ 
 <!-- HOW IT WORKS -->
 <section id="how">
   <div class="how-inner reveal">
@@ -1077,7 +1074,7 @@
     </div>
   </div>
 </section>
-
+ 
 <!-- PRICING -->
 <section class="pricing-section" id="pricing">
   <div class="pricing-header reveal">
@@ -1087,7 +1084,7 @@
   <div class="pricing-grid reveal">
     <div class="price-card">
       <div class="price-label">試用轉訂閱優惠</div>
-      <div class="price-amount">$499<span>/月</span></div>
+      <div class="price-amount">$299<span>/月</span></div>
       <div class="price-period">提供試用回饋者專屬</div>
       <div class="price-divider"></div>
       <ul class="price-features">
@@ -1101,7 +1098,7 @@
     </div>
     <div class="price-card featured">
       <div class="price-label">新用戶首月訂閱</div>
-      <div class="price-amount">$699<span>/月</span></div>
+      <div class="price-amount">$399<span>/月</span></div>
       <div class="price-period">首月限定優惠價格</div>
       <div class="price-divider"></div>
       <ul class="price-features">
@@ -1116,7 +1113,7 @@
     </div>
     <div class="price-card">
       <div class="price-label">正式月費</div>
-      <div class="price-amount">$999<span>/月</span></div>
+      <div class="price-amount">$499<span>/月</span></div>
       <div class="price-period">穩定上線後定價</div>
       <div class="price-divider"></div>
       <ul class="price-features">
@@ -1124,7 +1121,7 @@
         <li>單一帳號授權</li>
         <li>LINE 客服支援</li>
         <li>系統更新通知</li>
-        <li>推薦新用戶成功 當月享 $499</li>
+        <li>推薦新用戶成功 當月享 $299</li>
         <li>功能持續迭代更新</li>
       </ul>
       <a href="https://line.me/R/ti/p/@981zppdf" target="_blank" class="btn-outline" style="width:100%; text-align:center; display:block;">聯絡我們</a>
@@ -1135,7 +1132,7 @@
       <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.3em; color:var(--gold); text-transform:uppercase; margin-bottom:16px;">加購選項</div>
       <div style="display:flex; align-items:baseline; gap:12px; margin-bottom:16px;">
         <span style="font-family:'Noto Serif TC',serif; font-weight:700; font-size:26px; color:var(--white);">帳號金鑰</span>
-        <span style="font-family:'Noto Serif TC',serif; font-weight:900; font-size:32px; color:var(--gold);">$299</span>
+        <span style="font-family:'Noto Serif TC',serif; font-weight:900; font-size:32px; color:var(--gold);">$199</span>
       </div>
       <p style="font-size:13px; color:rgba(245,242,238,0.5); line-height:1.9;">每組授權金鑰綁定一台電腦、一個 Threads 帳號。若需在第二台設備或第二個帳號使用，需另購金鑰。</p>
       <p style="font-size:13px; color:rgba(245,242,238,0.5); line-height:1.9; margin-top:8px;">換機或換帳號需重新申請綁定，請透過 LINE 客服處理。</p>
@@ -1144,14 +1141,15 @@
       <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.3em; color:var(--gold); text-transform:uppercase; margin-bottom:16px;">推薦優惠</div>
       <div style="display:flex; align-items:baseline; gap:12px; margin-bottom:16px;">
         <span style="font-family:'Noto Serif TC',serif; font-weight:700; font-size:26px; color:var(--white);">推薦新用戶</span>
-        <span style="font-family:'Noto Serif TC',serif; font-weight:900; font-size:32px; color:var(--gold);">當月 $499</span>
+        <span style="font-family:'Noto Serif TC',serif; font-weight:900; font-size:32px; color:var(--gold);">當月 $299</span>
       </div>
-      <p style="font-size:13px; color:rgba(245,242,238,0.5); line-height:1.9;">成功推薦新用戶完成訂閱，隔月月費自動享 $499 優惠。推薦幾人就折扣幾個月，依序累計。</p>
-      <p style="font-size:13px; color:rgba(245,242,238,0.5); line-height:1.9; margin-top:8px;">透過 LINE 客服告知推薦帳號即可。例如本月推薦 2 人，隔月與下下月都享 $499。</p>
+      <p style="font-size:13px; color:rgba(245,242,238,0.5); line-height:1.9;">成功推薦新用戶完成訂閱，你當月的月費自動享 $299 優惠。</p>
+      <p style="font-size:13px; color:rgba(245,242,238,0.5); line-height:1.9; margin-top:8px;">透過 LINE 客服告知推薦帳號即可。例如本月推薦 2 人，隔月與下下月都享 $499。
+</p>
     </div>
   </div>
 </section>
-
+ 
 <!-- TRIAL -->
 <section class="trial-section" id="trial">
   <div class="trial-inner reveal">
@@ -1159,7 +1157,7 @@
       <p class="section-tag">Free Trial</p>
       <h2 class="section-title">首批試用<br>名額開放中</h2>
       <p>我們正在進行首批 5～10 人的完整試用計劃，試用期間享有完整功能，無任何限制。</p>
-      <p>試用結束後提供使用回饋，即可享有最低 $499/月 的訂閱優惠。</p>
+      <p>試用結束後提供使用回饋，即可享有最低 $299/月 的訂閱優惠。</p>
       <div class="trial-conditions">
         <div class="trial-conditions-title">試用條件</div>
         <ul>
@@ -1201,7 +1199,7 @@
     </div>
   </div>
 </section>
-
+ 
 <!-- RISK DISCLAIMER -->
 <section class="risk-section" style="padding: 80px 48px; background: rgba(192,57,43,0.04); border-top: 1px solid rgba(192,57,43,0.15); border-bottom: 1px solid rgba(192,57,43,0.15);">
   <div style="max-width: 900px; margin: 0 auto;" class="reveal">
@@ -1237,7 +1235,7 @@
     </div>
   </div>
 </section>
-
+ 
 <!-- NOTICE -->
 <section class="notice-section" id="faq">
   <div class="notice-inner reveal">
@@ -1259,15 +1257,13 @@
       <div class="notice-item">
         <div class="notice-q">客服如何聯絡？</div>
         <div class="notice-a">透過 LINE 官方帳號聯繫，系統維護會提前 2～3 小時通知，維護時間以半夜為主。</div>
-      </div>
-      <div class="notice-item">
-        <div class="notice-q">在其他人貼文底下留言後，收到對方回覆或按讚，系統會處理嗎？</div>
+        <div class="notice-q">在其他人貼文底下留言後，收到對方的回覆或按讚，系統會處理嗎？</div>
         <div class="notice-a">此類通知（他人回覆您在其他貼文的留言）目前不在系統支援的處理範圍內，系統可能會嘗試執行但不會有任何有效動作。需由用戶自行前往 Threads 手動回覆處理，此為系統已知限制，不影響其他功能正常運作。</div>
       </div>
     </div>
   </div>
 </section>
-
+ 
 <!-- FOOTER CTA -->
 <section class="footer-cta" id="contact">
   <h2 class="footer-cta-title">準備好了嗎？<br><span style="color:var(--gold)">讓系統替你工作。</span></h2>
@@ -1280,14 +1276,14 @@
     @a.z.n.g.888 · AZ Nagin Group · 2026
   </p>
 </section>
-
+ 
 <!-- FOOTER -->
 <footer>
   <div class="footer-brand">A.Z.N.G.</div>
   <div class="footer-copy">© 2026 AZ Nagin Group. All rights reserved.</div>
   <div class="footer-line">Threads · @a.z.n.g.888</div>
 </footer>
-
+ 
 <script>
   // Scroll reveal
   const reveals = document.querySelectorAll('.reveal');
@@ -1303,6 +1299,6 @@
   }, { threshold: 0.1 });
   reveals.forEach(el => observer.observe(el));
 </script>
-
+ 
 </body>
 </html>
