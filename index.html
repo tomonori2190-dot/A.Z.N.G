@@ -486,6 +486,8 @@
     border: 1px solid rgba(255,255,255,0.06);
     position: relative;
     transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
   }
  
   .price-card.featured {
@@ -548,6 +550,7 @@
     flex-direction: column;
     gap: 14px;
     margin-bottom: 40px;
+    flex: 1;
   }
  
   .price-features li {
@@ -1257,8 +1260,14 @@
       <div class="notice-item">
         <div class="notice-q">客服如何聯絡？</div>
         <div class="notice-a">透過 LINE 官方帳號聯繫，系統維護會提前 2～3 小時通知，維護時間以半夜為主。</div>
+      </div>
+      <div class="notice-item">
         <div class="notice-q">在其他人貼文底下留言後，收到對方的回覆或按讚，系統會處理嗎？</div>
         <div class="notice-a">此類通知（他人回覆您在其他貼文的留言）目前不在系統支援的處理範圍內，系統可能會嘗試執行但不會有任何有效動作。需由用戶自行前往 Threads 手動回覆處理，此為系統已知限制，不影響其他功能正常運作。</div>
+      </div>
+      <div class="notice-item">
+        <div class="notice-q">可以自行修改 Google Sheets 的欄位或結構嗎？</div>
+        <div class="notice-a">請勿自行新增、刪除或修改試算表的欄位名稱與結構，這樣可能導致系統無法正確讀取資料而發生錯誤。如有需要調整，請透過 LINE 客服確認後再操作。</div>
       </div>
     </div>
   </div>
